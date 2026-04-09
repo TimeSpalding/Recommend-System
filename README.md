@@ -78,3 +78,33 @@ Dựa trên log chạy thực tế với một người dùng ngẫu nhiên (`Us
 * **Giải quyết Cold-Start & Hidden Gems:** Thuật toán `recommend_inclusive` xuất sắc trong việc pha trộn các bài hát thịnh hành (Top Hits từ mô hình đồ thị) và các bài hát chưa từng xuất hiện trong mô hình nhưng có metadata tương đồng (Hidden Gems khai thác bởi TF-IDF).
 * **Bắt kịp ngữ cảnh (Session-based):** Mô hình Real-time và Next-in-Session phản ứng cực nhạy. Khi user đưa vào 3 bài mồi (Seed tracks), hệ thống lập tức hướng các kết quả tiếp theo sang các nghệ sĩ tương tự (như *The Chemical Brothers*, *The Crystal Method*, *Metallica*).
 * **Khám phá (Serendipity):** Chế độ `recommend_discovery` tự động đẩy người dùng ra khỏi "vùng an toàn" để tìm kiếm các bài hát/nghệ sĩ mới nhưng vẫn giữ được sợi dây liên kết vô hình với sở thích gốc.
+1. Cài đặt thư viện yêu cầu
+Đảm bảo bạn đã cài đặt Python (khuyến nghị >= 3.9). Chạy lệnh sau để cài đặt các thư viện cần thiết:
+
+Bash
+pip install streamlit pandas numpy scipy scikit-learn faiss-cpu anthropic tqdm joblib
+2. Chuẩn bị Dữ Liệu
+Do hệ thống được thiết kế chạy local offline, bạn cần đảm bảo các file mô hình đã được đặt cùng thư mục gốc của dự án:
+
+mappings.db
+
+mappings_small.pkl
+
+user_vectors.npy & item_vectors.npy
+
+train_user_item.npz & test_user_item.npz
+
+3. Cấu hình API Key cho Chatbot
+Chatbot sử dụng dịch vụ của Anthropic. Bạn cần khai báo API Key. Tạo một thư mục .streamlit ở thư mục gốc, bên trong tạo file secrets.toml và dán key của bạn vào:
+
+Ini, TOML
+# .streamlit/secrets.toml
+ANTHROPIC_API_KEY = "sk-ant-xxx..."
+(Lưu ý: Không commit file secrets.toml này lên Github).
+
+4. Khởi chạy Ứng dụng
+Tại thư mục chứa dự án, mở terminal và chạy lệnh:
+
+Bash
+streamlit run app.py
+Hệ thống sẽ tải mô hình vào bộ nhớ đệm (mất khoảng 30s cho lần đầu tiên) và mở giao diện Web tại địa chỉ http://localhost:8501.
