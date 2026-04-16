@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from ui_components import render_song_cards, render_section_header
+from src.ui.components import render_song_cards, render_section_header
 
 def render_home_tab(rec_sys, user_input, n_recs):
     # Khởi tạo 3 tab con bên trong nhóm Trang Chủ

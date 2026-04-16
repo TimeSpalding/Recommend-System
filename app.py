@@ -2,16 +2,16 @@ import streamlit as st
 import pandas as pd
 import time
 from datetime import datetime
-from main import LocalRecommender
+from src.core.recommender import LocalRecommender
 
 # --- IMPORT CÁC MODULE GIAO DIỆN ĐÃ TÁCH ---
-from tab_home import render_home_tab
-from tab_discovery import render_discovery_tab
-from interactive_tab import render_interactive_tab
-from chatbot_improved import render_chatbot_tab
-from tab_context import render_context_tab
+from src.ui.tab_home import render_home_tab
+from src.ui.tab_discovery import render_discovery_tab
+from src.ui.tab_interactive import render_interactive_tab
+from src.ui.chatbot import render_chatbot_tab
+from src.ui.tab_context import render_context_tab
 
-from ui_components import inject_custom_css, render_bottom_player
+from src.ui.components import inject_custom_css, render_bottom_player
 
 # ==========================================
 # 0. CẤU HÌNH TRANG

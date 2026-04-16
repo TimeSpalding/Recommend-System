@@ -2,7 +2,7 @@ import re
 import streamlit as st
 import time
 from anthropic import Anthropic
-from ui_components import render_section_header
+from src.ui.components import render_section_header
 
 # =============================================
 # 1. KHỞI TẠO CLIENT ANTHROPIC 

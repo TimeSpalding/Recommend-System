@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from ui_components import render_section_header
+from src.ui.components import render_section_header
 
 def render_context_tab(rec_sys, user_input, n_recs):
     tab1, = st.tabs([
@@ -48,7 +48,7 @@ def render_context_tab(rec_sys, user_input, n_recs):
                 
                 # Hiển thị kết quả từ session_state để duy trì khi rerun
                 if st.session_state.get('context_playlist') is not None:
-                    from ui_components import render_song_cards
+                    from src.ui.components import render_song_cards
                     render_song_cards(st.session_state['context_playlist'], key_prefix="ctx_playlist")
 
     # --- TAB 3: INTERACTIVE SESSION ---

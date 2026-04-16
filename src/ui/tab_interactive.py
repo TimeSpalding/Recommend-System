@@ -3,7 +3,7 @@ import pandas as pd
 import time
 import sqlite3
 from datetime import datetime
-from ui_components import render_section_header
+from src.ui.components import render_section_header
 
 def _save_listen(db_path: str, user_id: str, track_name: str, artist_name: str, timestamp: float, rec_sys):
     """Lưu lượt nghe vào SQLite và đảm bảo ID khớp với Model"""
@@ -172,7 +172,7 @@ def render_interactive_tab(rec_sys, user_input, n_recs, db_path="./mappings.db")
                         
                         if ok:
                             # ĐỒNG BỘ: Cập nhật Lịch sử âm nhạc và trình phát chính
-                            from ui_components import handle_play_song
+                            from src.ui.components import handle_play_song
                             handle_play_song(row['track_name'], row['artist_name'], img_url)
                             
                             st.session_state.it_history.append({
