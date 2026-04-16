@@ -18,7 +18,7 @@ from ui_components import inject_custom_css, render_bottom_player
 # ==========================================
 st.set_page_config(
     page_title="Music Recommender AI", 
-    page_icon="🎵", 
+    page_icon="https://cdn-icons-png.flaticon.com/512/3844/3844724.png", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -44,19 +44,29 @@ with st.spinner("Đang khởi động bộ não AI..."):
 # ==========================================
 # 2. SIDEBAR - ĐIỀU KHIỂN CHÍNH
 # ==========================================
-st.sidebar.title("🎛️ Bảng Điều Khiển")
+st.sidebar.title("Bảng Điều Khiển")
 st.sidebar.markdown("---")
 
-user_input = st.sidebar.text_input("👤 Nhập User ID (VD: 13, 42):", value="13")
-n_recs = st.sidebar.slider("📊 Số lượng gợi ý:", min_value=5, max_value=30, value=10, step=5)
+# --- Lấy User ID từ URL nếu có ---
+if "user_id" in st.query_params:
+    default_user = st.query_params["user_id"]
+else:
+    default_user = "13"
+
+user_input = st.sidebar.text_input("Nhập User ID (VD: 13, 42):", value=default_user)
+
+# Cập nhật lại URL khi User ID thay đổi
+if user_input != st.query_params.get("user_id"):
+    st.query_params["user_id"] = user_input
+n_recs = st.sidebar.slider("Số lượng gợi ý:", min_value=5, max_value=30, value=10, step=5)
 
 category = st.sidebar.selectbox(
-    "📂 Chọn Nhóm Trải Nghiệm:",
+    "Chọn Nhóm Trải Nghiệm:",
     [
-        "🏠 Trang Chủ & Cá Nhân",
-        "🚀 Khám Phá & Xu Hướng",
-        "🎧 Ngữ Cảnh & Tương Tác",
-        "🤖 Trợ Lý Ảo AI"
+        "Trang Chủ & Cá Nhân",
+        "Khám Phá & Xu Hướng",
+        "Playlist Của Bạn",
+        "Trợ Lý Ảo AI"
     ]
 )
 
@@ -67,36 +77,36 @@ if user_input:
 # ==========================================
 # 3. NỘI DUNG CHÍNH (MAIN AREA)
 # ==========================================
-st.title("🎵 Hệ Thống Gợi Ý Âm Nhạc Thông Minh")
+st.title("Hệ Thống Gợi Ý Âm Nhạc Thông Minh")
 st.markdown("---")
 
 start_time = time.time()
 
 # --- NHÓM 1: TRANG CHỦ & CÁ NHÂN ---
-if category == "🏠 Trang Chủ & Cá Nhân":
+if category == "Trang Chủ & Cá Nhân":
     # Mọi code vẽ giao diện (tab1, tab2, tab3) đều nằm gọn trong hàm này
     render_home_tab(rec_sys, user_input, n_recs)
 
 # --- NHÓM 2: KHÁM PHÁ & XU HƯỚNG ---
-elif category == "🚀 Khám Phá & Xu Hướng":
+elif category == "Khám Phá & Xu Hướng":
     # Mọi code vẽ giao diện đều nằm gọn trong hàm này
     render_discovery_tab(rec_sys, user_input, n_recs)
 
-# --- NHÓM 3: NGỮ CẢNH & TƯƠNG TÁC ---
-elif category == "🎧 Ngữ Cảnh & Tương Tác":
+# --- NHÓM 3: Playlist Của Bạn ---
+elif category == "Playlist Của Bạn":
     render_context_tab(rec_sys, user_input, n_recs)
     
 
 # --- NHÓM 4: TRỢ LÝ ẢO AI ---
-elif category == "🤖 Trợ Lý Ảo AI":
+elif category == "Trợ Lý Ảo AI":
     render_chatbot_tab(rec_sys, user_input, n_recs)
 
 # ==========================================
 # 4. FOOTER
 # ==========================================
-if category != "🤖 Trợ Lý Ảo AI":
+if category != "Trợ Lý Ảo AI":
     st.markdown("---")
-    st.caption(f"⚡ Phản hồi trong: {time.time() - start_time:.4f} giây")
+    st.caption(f"Phản hồi trong: {time.time() - start_time:.4f} giây")
 
     # Chỉ hiển thị Music Player tại các tab không phải là Chatbot
     render_bottom_player()

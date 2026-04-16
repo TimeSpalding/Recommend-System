@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import sqlite3
 from datetime import datetime
+from ui_components import render_section_header
 
 def _save_listen(db_path: str, user_id: str, track_name: str, artist_name: str, timestamp: float, rec_sys):
     """Lưu lượt nghe vào SQLite và đảm bảo ID khớp với Model"""
@@ -34,7 +35,7 @@ def _save_listen(db_path: str, user_id: str, track_name: str, artist_name: str, 
             cur.execute("INSERT INTO user_item_ts (uid, iid, ts) VALUES (?, ?, ?)", (int(uid), int(iid), timestamp))
         
         cur.execute("COMMIT;")
-        return True, f"✅ Đã lưu: {track_name}"
+        return True, f"Thành công: {track_name}"
     except Exception as e:
         if conn: conn.execute("ROLLBACK;")
         return False, str(e)
@@ -68,11 +69,10 @@ def _get_feed(rec_sys, user_id: str, n: int = 30) -> pd.DataFrame:
     return rec_sys.recommend_hybrid(user_id, n=n)
 
 def render_interactive_tab(rec_sys, user_input, n_recs, db_path="./mappings.db"):
-    st.subheader("🖱️ Interactive Session")
-    st.markdown("""
-    *Hệ thống sẽ thay đổi gợi ý ngay lập tức dựa trên mỗi cú click của bạn. 
-    Dữ liệu được lưu trữ bền vững vào Database.*
-    """)
+    render_section_header("Interactive Session", 
+                        subtitle="Hệ thống sẽ thay đổi gợi ý ngay lập tức dựa trên mỗi tương tác của bạn.",
+                        icon_name="mouse-pointer",
+                        color="#10b981")
 
     # Khởi tạo session state cho lịch sử click nếu chưa có
     if "it_history" not in st.session_state:
@@ -93,12 +93,12 @@ def render_interactive_tab(rec_sys, user_input, n_recs, db_path="./mappings.db")
     with col_info:
         if display_history:
             history_str = " ➔ ".join([f"**{h['track']}**" for h in display_history[-3:]])
-            st.info(f"🎧 Tiếp tục dựa trên: {history_str}")
+            st.info(f"Đang nghe: {history_str}")
         else:
-            st.info("💡 Hãy click vào một bài hát để bắt đầu phiên nghe cá nhân hóa.")
+            st.info("Hãy chọn một bài hát để bắt đầu phiên nghe cá nhân hóa.")
 
     with col_reset:
-        if st.button("🔄 Reset Session", use_container_width=True):
+        if st.button("Reset Session", use_container_width=True):
             st.session_state.it_history = []
             st.rerun()
 
@@ -162,11 +162,11 @@ def render_interactive_tab(rec_sys, user_input, n_recs, db_path="./mappings.db")
                     
                     # 2. Thông tin bài hát (Dùng HTML để ép cỡ chữ nhỏ)
                     st.markdown(f'<p class="song-title">{row["track_name"]}</p>', unsafe_allow_html=True)
-                    st.markdown(f'<p class="artist-name">🎤 {row["artist_name"]}</p>', unsafe_allow_html=True)
+                    st.markdown(f'<p class="artist-name">{row["artist_name"]}</p>', unsafe_allow_html=True)
                     
                     # 3. Nút bấm nhỏ gọn
                     button_key = f"it_btn_{row['track_name']}_{idx}"
-                    if st.button("🎵 Nghe", key=button_key, use_container_width=True):
+                    if st.button("Nghe", key=button_key, use_container_width=True):
                         actual_ts = datetime.now().timestamp()
                         ok, msg = _save_listen(db_path, user_input, row['track_name'], row['artist_name'], actual_ts, rec_sys)
                         

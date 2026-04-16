@@ -17,159 +17,349 @@ def _get_random_local_song():
 def inject_custom_css():
     css_content = textwrap.dedent("""
         <style>
-        /* Base Dark Theme & Spotify Vibes */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+        
         :root {
-            --spotify-black: #121212;
-            --spotify-base: #181818;
-            --spotify-highlight: #282828;
-            --spotify-green: #1db954;
-            --spotify-text: #b3b3b3;
-            --spotify-white: #ffffff;
+            --bg-main: #f0f7f4;
+            --text-main: #064e3b;
+            --text-sub: #059669;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --spotify-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-green: #22c55e;
+            --accent-light-green: #4ade80;
         }
-        
-        /* Hide default Streamlit paddings if possible */
+
+        .stApp, .stApp [data-testid="stHeader"], .stApp h1, .stApp h2, .stApp h3, .stApp p, .stApp li, .stApp span {
+            color: var(--text-main) !important;
+        }
+
+        .stApp {
+            background: 
+                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(245, 158, 11, 0.1) 0px, transparent 50%),
+                var(--bg-main);
+            font-family: 'Outfit', sans-serif !important;
+        }
+
         .block-container {
-            padding-top: 2rem !important;
-            padding-bottom: 5rem !important; /* give space for bottom player */
+            padding-top: 3rem !important;
+            padding-bottom: 8rem !important;
         }
-        
+
         /* Custom Card Styles */
         .song-card {
-            background-color: var(--spotify-base);
-            border-radius: 8px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
             padding: 16px;
-            transition: background-color 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .song-card:hover {
-            background-color: var(--spotify-highlight);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.9);
         }
         .song-card img {
             width: 100%;
-            border-radius: 4px;
+            border-radius: 12px;
             aspect-ratio: 1/1;
             object-fit: cover;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
         .song-title {
-            color: var(--spotify-white);
-            font-weight: bold;
-            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin: 0;
         }
         .song-artist {
-            color: var(--spotify-text);
-            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-size: 0.9rem;
             margin: 0;
         }
         
-        /* Fixed Bottom Player Container */
-        .bottom-player-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background-color: var(--spotify-base);
-            border-top: 1px solid var(--spotify-highlight);
-            z-index: 99999;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-        }
-        
-        /* Style native audio to fit the theme */
-        audio {
-            width: 100%;
-            height: 40px;
-            filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Make it look better in dark mode */
-            opacity: 0.9;
-        }
-        .player-info {
+        /* Modern Section Header styling */
+        .section-header-modern {
             display: flex;
             align-items: center;
             gap: 16px;
-            width: 30%;
+            margin-top: 3rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 12px;
         }
-        .player-info img {
-            width: 56px;
-            height: 56px;
+        .section-header-modern h3 {
+            color: var(--text-main);
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+        .header-accent-bar {
+            width: 8px;
+            height: 45px;
             border-radius: 4px;
         }
-        .player-controls {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+        .section-subtitle-modern {
+            color: var(--text-sub);
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            padding-left: 24px;
         }
-        .control-buttons-fake {
-            color: #b3b3b3;
-            font-size: 1.5rem;
-            letter-spacing: 15px;
-        }
-        .progress-bar {
-            width: 80%;
-            height: 4px;
-            background-color: var(--spotify-highlight);
-            border-radius: 2px;
-            position: relative;
-        }
-        .progress-fill {
-            width: 30%;
-            height: 100%;
-            background-color: var(--spotify-white);
-            border-radius: 2px;
-        }
-        .player-volume {
-            width: 30%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 10px;
-            color: var(--spotify-text);
+
+        /* Input styling for light mode - Green Accents! */
+        div[data-testid="stTextInput"] input, 
+        div[data-testid="stNumberInput"] input, 
+        div[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+        div[data-testid="stDateInput"] input {
+            background-color: white !important;
+            color: var(--text-main) !important;
+            border: 2px solid var(--accent-light-green) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1) !important;
         }
         
-        /* Make Streamlit Buttons inside cards look like play buttons */
-        div[data-testid="stButton"] button {
+        div[data-testid="stSelectbox"] [data-baseweb="select"], 
+        div[data-testid="stSelectbox"] [data-baseweb="select"] > div {
+            background-color: white !important;
+            color: var(--text-main) !important;
+        }
+
+        div[data-testid="stSelectbox"] [data-baseweb="select"]:hover,
+        div[data-testid="stDateInput"] input:hover {
+            border-color: var(--accent-green) !important;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        /* Fix Selectbox internal text and icons */
+        div[data-testid="stSelectbox"] svg {
+            fill: var(--accent-green) !important;
+        }
+        
+        /* Checkbox styling - Green */
+        div[data-testid="stCheckbox"] [role="checkbox"] {
+            background-color: white !important;
+            border-color: var(--accent-green) !important;
+        }
+        div[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] {
+            background-color: var(--accent-green) !important;
+        }
+        
+        /* Dropdown menu and popover styling (Baseweb Portals) */
+        div[data-baseweb="popover"], div[data-baseweb="menu"], div[role="listbox"] {
+            background-color: white !important;
+            color: var(--text-main) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        div[data-baseweb="popover"] * {
+            color: var(--text-main) !important;
             background-color: transparent !important;
-            border: 1px solid var(--spotify-text) !important;
-            width: 100%;
-        }
-        div[data-testid="stButton"] button:hover {
-            border-color: var(--spotify-white) !important;
-            background-color: var(--spotify-highlight) !important;
         }
         
-        /* Make sure the chat input doesn't overlap the scroll area abruptly */
-        div[data-testid="stChatMessageContainer"] {
-            padding-bottom: 120px !important;
+        div[data-baseweb="popover"] button {
+            background-color: transparent !important;
+        }
+
+        li[role="option"] {
+            background-color: white !important;
+            color: var(--text-main) !important;
+            padding: 10px 20px !important;
+        }
+        li[role="option"]:hover {
+            background-color: rgba(139, 92, 246, 0.1) !important;
+        }
+
+        /* Specifically for the calendar days - Fix visibility */
+        div[data-baseweb="calendar"] {
+            background-color: white !important;
+        }
+        div[data-baseweb="calendar"] header, div[data-baseweb="calendar"] [role="grid"] {
+            background-color: white !important;
+            color: #064e3b !important;
+        }
+        div[data-baseweb="calendar"] * {
+            color: #064e3b !important;
         }
         
-        /* Fixed Player Wrapper Style (Using ID hook) */
+        /* Ensure days are visible and not hidden */
+        div[aria-roledescription="calendar day"] {
+            color: #064e3b !important;
+            background-color: white !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Fix the squares for days outside the current month - No opacity 0 */
+        div[data-baseweb="calendar"] [role="grid"] > div:not([aria-label]) {
+            background-color: white !important;
+            color: #d1d5db !important; /* Light grey for empty days */
+        }
+        
+        /* Selected day highlight - Bright Green */
+        div[data-baseweb="calendar"] [aria-selected="true"],
+        div[data-baseweb="calendar"] [aria-selected="true"] * {
+            background-color: #22c55e !important;
+            color: white !important;
+            border-radius: 50% !important;
+        }
+        
+        /* Highlight Today */
+        div[data-baseweb="calendar"] [aria-current="date"] {
+            border: 2px solid var(--accent-green) !important;
+            border-radius: 50% !important;
+        }
+
+        /* Chat UI styling */
+        div[data-testid="stChatMessage"] {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            border-radius: 16px !important;
+            color: var(--text-main) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+        div[data-testid="stChatMessage"] p {
+            color: var(--text-main) !important;
+        }
+        div[data-testid="stChatInput"] textarea {
+            background-color: white !important;
+            color: var(--text-main) !important;
+            border: 2px solid var(--accent-purple) !important;
+            border-radius: 12px !important;
+        }
+        div[data-testid="stChatInput"] {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 15px !important;
+            box-shadow: 0 -10px 25px rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Remove black area at the bottom and match theme */
+        footer {display: none !important;}
+        [data-testid="stHeader"] {background: transparent !important;}
+        div[data-testid="stBottom"] {
+            background-color: transparent !important;
+        }
+        div[data-testid="stBottomBlockContainer"] {
+            background-color: transparent !important;
+            padding-bottom: 20px !important;
+        }
+        .stApp {
+            background-color: var(--bg-main) !important;
+        }
+        
+        /* Fixed Player Wrapper Style (Light Glassmorphism) */
         #fixed-player-hook + div {
             position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            background-color: var(--spotify-base) !important;
-            border-top: 1px solid var(--spotify-highlight) !important;
+            bottom: 20px !important;
+            left: 20px !important;
+            right: 20px !important;
+            width: calc(100% - 40px) !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            border-radius: 24px !important;
             z-index: 100000 !important;
-            padding: 10px 40px !important;
-            height: 100px !important;
+            padding: 15px 40px !important;
+            height: 90px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
             display: flex !important;
             align-items: center !important;
         }
+
+        /* Custom buttons styling */
+        div[data-testid="stButton"] button {
+            background-color: white !important;
+            color: var(--accent-purple) !important;
+            border: 1px solid var(--accent-purple) !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+        }
+        div[data-testid="stButton"] button:hover {
+            background-color: var(--accent-purple) !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2) !important;
+        }
+        div[data-testid="stChatMessageContainer"] {
+            padding-bottom: 140px !important;
+        }
+        
+        /* Audio player coloring */
+        audio {
+            height: 35px;
+            width: 100%;
+            border-radius: 20px;
+        }
+        /* Sidebar styling */
+        [data-testid="stSidebar"] {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        [data-testid="stSidebar"] .stMarkdown p, [data-testid="stSidebar"] label {
+            color: var(--text-main) !important;
+        }
+        
+        /* Fix Tabs Colors */
+        button[data-baseweb="tab"] {
+            color: var(--text-sub) !important;
+        }
+        button[data-baseweb="tab"][aria-selected="true"] {
+            color: var(--accent-purple) !important;
+            border-bottom-color: var(--accent-purple) !important;
+        }
         </style>
+        
+        <!-- Load Lucide Icons -->
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script>
+            // Initialize lucide icons
+            document.addEventListener('DOMContentLoaded', (event) => {
+                lucide.createIcons();
+            });
+            // Also run it periodically in case of streamlit re-renders
+            setInterval(() => {
+                lucide.createIcons();
+            }, 1000);
+        </script>
     """)
     st.markdown(css_content, unsafe_allow_html=True)
+
+
+def render_section_header(title, subtitle=None, icon_name=None, color="#8b5cf6"):
+    """
+    Render a vibrant section header with a color accent and Lucide icon.
+    """
+    icon_html = f'<i data-lucide="{icon_name}" style="width: 32px; height: 32px; color: {color}"></i>' if icon_name else ""
+    header_html = f"""
+    <div class="section-header-modern">
+        <div class="header-accent-bar" style="background: {color}; box-shadow: 0 0 15px {color}80;"></div>
+        {icon_html}
+        <h3>{title}</h3>
+    </div>
+    """
+    st.markdown(header_html, unsafe_allow_html=True)
+    if subtitle:
+        st.markdown(f'<p class="section-subtitle-modern">{subtitle}</p>', unsafe_allow_html=True)
 
 
 def handle_play_song(song_title, artist_name, img_url):
@@ -220,7 +410,10 @@ def render_song_cards(df, key_prefix="card"):
                 
                 # Tạo link ảnh giả dựa trên tên để nhất quán
                 safe_seed = "".join([c for c in str(song_title) if c.isalnum()])
-                img_url = getattr(row, 'image', f"https://picsum.photos/seed/{safe_seed}/200")
+                # Lấy ảnh từ cột 'image' nếu có, nếu không thì dùng placeholder
+                img_url = row.get('image') if 'image' in df.columns else f"https://picsum.photos/seed/{safe_seed}/200"
+                if pd.isna(img_url) or not img_url:
+                    img_url = f"https://picsum.photos/seed/{safe_seed}/200"
                 
                 # Kiểm tra xem có cột thời gian nghe không (để hiển thị trong tab Lịch sử)
                 time_info_html = ""
@@ -228,7 +421,7 @@ def render_song_cards(df, key_prefix="card"):
                     gh = row.get("Giờ nghe", "")
                     nn = row.get("Ngày nghe", "")
                     if pd.notna(gh) and pd.notna(nn):
-                        time_info_html = f'<p style="color:var(--spotify-green); font-size:0.75rem; margin-top:4px;">🕒 {gh} - {nn}</p>'
+                        time_info_html = f'<p style="color:var(--spotify-green); font-size:0.75rem; margin-top:4px;"> {gh} - {nn}</p>'
                 
                 with col:
                     # HTML phần hình và chữ
@@ -255,7 +448,7 @@ def render_bottom_player():
         st.markdown('<div id="fixed-player-hook"></div>', unsafe_allow_html=True)
         
         with st.container():
-            col1, col2, col3 = st.columns([1, 2, 1])
+            col1, col2 = st.columns([1, 3])
             
             with col1:
                 # Thông tin bài hát (Trái)
@@ -263,8 +456,8 @@ def render_bottom_player():
                 <div style="display:flex; align-items:center; gap:12px;">
                     <img src="{current_song['image']}" style="width:52px; height:52px; border-radius:4px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
                     <div style="overflow:hidden;">
-                        <h4 style="color:white; margin:0; font-size:14px; white-space:nowrap; text-overflow:ellipsis;">{current_song['title']}</h4>
-                        <p style="color:#b3b3b3; margin:0; font-size:12px; white-space:nowrap; text-overflow:ellipsis;">{current_song['artist']}</p>
+                        <h4 style="color:var(--text-main); margin:0; font-size:14px; white-space:nowrap; text-overflow:ellipsis;">{current_song['title']}</h4>
+                        <p style="color:var(--text-sub); margin:0; font-size:12px; white-space:nowrap; text-overflow:ellipsis;">{current_song['artist']}</p>
                     </div>
                 </div>
                 """
@@ -276,13 +469,3 @@ def render_bottom_player():
                     st.audio(current_song['audio_path'], autoplay=True)
                 else:
                     st.info("⚠️ Đang chọn file nhạc...")
-
-            with col3:
-                # Volume / Extras (Phải)
-                html_vol = """
-                <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; color:#b3b3b3; margin-top:15px;">
-                    <span>🔊</span>
-                    <div style="width:100px; height:4px; background:#1db954; border-radius:2px;"></div>
-                </div>
-                """
-                st.markdown(html_vol, unsafe_allow_html=True)
